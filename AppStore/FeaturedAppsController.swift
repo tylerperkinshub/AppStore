@@ -28,7 +28,7 @@ class FeaturedAppsController: UICollectionViewController, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.height, height: 230)
+        return CGSize(width: view.frame.width, height: 230)
     }
 
 

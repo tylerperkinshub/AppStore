@@ -12,7 +12,6 @@ import UIKit
 class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private let cellId = "cellId"
-
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,16 +21,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
     required init?(coder aDecoder: NSCoder) {
         fatalError("init (coder:) has not been implemented")
     }
-    
-    let nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Best New Apps"
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        print("label added")
-        return label
-    }()
     
     let appsCollectionView: UICollectionView = {
         
@@ -78,18 +67,27 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: frame.height - 30)
+        return CGSize(width: 100, height: frame.height - 32)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsetsMake(0, 14, 0, 14)
     }
+    
+    let nameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Best New Apps"
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
 }
 
