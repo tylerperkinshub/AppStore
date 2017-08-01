@@ -13,6 +13,14 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
     
     private let cellId = "cellId"
     
+    var appCategory: AppCategory? {
+        didSet {
+            if let name = appCategory?.name {
+                nameLabel.text = name
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -63,7 +71,11 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        
+        if let count = appCategory?.apps?.count {
+        return count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

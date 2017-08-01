@@ -34,7 +34,6 @@ class AppCell: UICollectionViewCell {
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 13)
         label.numberOfLines = 2
-        print("label added")
         return label
     }()
     
@@ -43,7 +42,6 @@ class AppCell: UICollectionViewCell {
         label.text = "Entertainment"
         label.textColor = UIColor.darkGray
         label.font = UIFont.systemFont(ofSize: 13)
-        print("label added")
         return label
     }()
     
@@ -52,7 +50,6 @@ class AppCell: UICollectionViewCell {
         label.text = "3.99"
         label.textColor = UIColor.darkGray
         label.font = UIFont.systemFont(ofSize: 13)
-        print("label added")
         return label
     }()
     
