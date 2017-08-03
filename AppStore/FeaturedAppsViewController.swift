@@ -10,21 +10,37 @@ import UIKit
 
 class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    private let cellId = "cellId"
+    let cellId = "cellId"
+    private let largeCellId = "largeCellId"
     
     var appCategories: [AppCategory]?
+
     
     override func viewDidLoad() {
         
         
         super.viewDidLoad()
-        appCategories = AppCategory.sampleAppCategories()
+        //appCategories = AppCategory.sampleAppCategories()
+        AppCategory.fetchFeaturedApps { (appCategories) -> () in
+            self.appCategories = appCategories
+            self.collectionView?.reloadData()
+        }
         
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(LargeCategoryCell.self, forCellWithReuseIdentifier: largeCellId)
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        if indexPath.item == 2 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: largeCellId, for: indexPath) as! LargeCategoryCell
+            cell.appCategory = appCategories?[indexPath.item]
+            
+            return cell
+            
+        }
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CategoryCell
         
         cell.appCategory = appCategories?[indexPath.item]
@@ -41,10 +57,17 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        if indexPath.item == 2 {
+            return CGSize(width: view.frame.width, height: 160)
+        } else {
         return CGSize(width: view.frame.width, height: 230)
+        }
     }
 
 
 }
+
+
 
 

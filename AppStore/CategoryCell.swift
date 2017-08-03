@@ -11,7 +11,7 @@ import UIKit
 
 class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    private let cellId = "cellId"
+    let cellId = "cellId"
     
     var appCategory: AppCategory? {
         didSet {
@@ -79,8 +79,8 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppCell
+        cell.app = appCategory?.apps?[indexPath.item]
         return cell
     }
     
@@ -103,6 +103,33 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
     
 }
 
-
+class LargeCategoryCell: CategoryCell {
+    
+    fileprivate let largeAppCellId = "largeAppCellId"
+    
+    override func setupViews() {
+        super.setupViews()
+        appsCollectionView.register(LargeAppCell.self, forCellWithReuseIdentifier: "largeAppCellId")
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: largeAppCellId, for: indexPath) as! AppCell
+        cell.app = appCategory?.apps?[indexPath.item]
+        return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 200, height: frame.height - 32)
+    }
+    
+    fileprivate class LargeAppCell: AppCell {
+        fileprivate override func setupViews() {
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(imageView)
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": imageView]))
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-2-[v0]-14-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": imageView]))
+        }
+    }
+}
 
 
