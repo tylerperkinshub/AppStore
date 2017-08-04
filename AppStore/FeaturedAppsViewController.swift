@@ -15,6 +15,7 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
     
     let headerId = "headerId"
     
+    var featuredApps: FeaturedApps?
     var appCategories: [AppCategory]?
 
     
@@ -22,9 +23,12 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
         
         
         super.viewDidLoad()
-        //appCategories = AppCategory.sampleAppCategories()
-        AppCategory.fetchFeaturedApps { (appCategories) -> () in
-            self.appCategories = appCategories
+        
+        navigationItem.title = "Featured Apps"
+        
+        AppCategory.fetchFeaturedApps { (featuredApps) -> () in
+            self.featuredApps = featuredApps
+            self.appCategories = featuredApps.appCategories
             self.collectionView?.reloadData()
         }
         
@@ -69,13 +73,12 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 150)
+        return CGSize(width: view.frame.width, height: 120)
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! Header
-        header.appCategory = appCategories?.first
-        
+        header.appCategory = featuredApps?.bannerCategory
         return header
     }
 
