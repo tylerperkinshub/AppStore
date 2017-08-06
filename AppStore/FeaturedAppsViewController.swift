@@ -10,6 +10,7 @@ import UIKit
 
 class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
+    
     let cellId = "cellId"
     let largeCellId = "largeCellId"
     
@@ -17,7 +18,9 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
     
     var featuredApps: FeaturedApps?
     var appCategories: [AppCategory]?
+    var appCategory: AppCategory?
 
+    var featureAppsController: FeaturedAppsViewController?
     
     override func viewDidLoad() {
         
@@ -38,11 +41,27 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
         collectionView?.register(Header.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let app = appCategory?.apps?[indexPath.item] {
+        featureAppsController?.showAppDetailForApp(app: app)
+        }
+        print("selected")
+    }
+    
+    func showAppDetailForApp(app: App) {
+        let layout = UICollectionViewFlowLayout()
+        let appDetailController = AppDetailController(collectionViewLayout: layout)
+        appDetailController.app = app
+        navigationController?.pushViewController(appDetailController, animated: true)
+    }
+    
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.item == 2 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: largeCellId, for: indexPath) as! LargeCategoryCell
             cell.appCategory = appCategories?[indexPath.item]
+            cell.featuredAppsController = self
             
             return cell
             
@@ -51,6 +70,7 @@ class FeaturedAppsViewController: UICollectionViewController, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CategoryCell
         
         cell.appCategory = appCategories?[indexPath.item]
+        cell.featuredAppsController = self
         
         return cell
     }

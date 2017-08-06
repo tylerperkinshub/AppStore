@@ -16,6 +16,7 @@
 		9655B8C31F311A6700983E9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9655B8C21F311A6700983E9F /* Main.storyboard */; };
 		96D46F091F3122E4003E4263 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D46F081F3122E4003E4263 /* Models.swift */; };
 		96D46F0C1F33ED47003E4263 /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D46F0B1F33ED47003E4263 /* Header.swift */; };
+		96D46F0E1F378723003E4263 /* AppDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D46F0D1F378723003E4263 /* AppDetailController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		9655B8C21F311A6700983E9F /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		96D46F081F3122E4003E4263 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		96D46F0B1F33ED47003E4263 /* Header.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
+		96D46F0D1F378723003E4263 /* AppDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 			children = (
 				9655B8AA1F303B9D00983E9F /* AppDelegate.swift */,
 				9655B8AC1F303B9D00983E9F /* FeaturedAppsViewController.swift */,
+				96D46F0D1F378723003E4263 /* AppDetailController.swift */,
 				96D46F0B1F33ED47003E4263 /* Header.swift */,
 				9655B8BE1F30418A00983E9F /* CategoryCell.swift */,
 				96D46F081F3122E4003E4263 /* Models.swift */,
@@ -157,6 +160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96D46F0E1F378723003E4263 /* AppDetailController.swift in Sources */,
 				9655B8AD1F303B9D00983E9F /* FeaturedAppsViewController.swift in Sources */,
 				9655B8C11F30578E00983E9F /* AppCell.swift in Sources */,
 				9655B8AB1F303B9D00983E9F /* AppDelegate.swift in Sources */,

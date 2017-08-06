@@ -11,6 +11,8 @@ import UIKit
 
 class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    var featuredAppsController: FeaturedAppsViewController?
+    
     let cellId = "cellId"
     
     var appCategory: AppCategory? {
@@ -93,6 +95,12 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
         return UIEdgeInsetsMake(0, 14, 0, 14)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let app = appCategory?.apps?[indexPath.item] {
+            featuredAppsController?.showAppDetailForApp(app: app)
+        }
+    }
+    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Best New Apps"
@@ -101,6 +109,8 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UICollection
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    
     
 }
 
