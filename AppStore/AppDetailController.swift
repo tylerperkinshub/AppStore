@@ -12,13 +12,47 @@ class AppDetailController: UICollectionViewController, UICollectionViewDelegateF
     
     var app: App? {
         didSet {
-            navigationItem.title = app?.name
-
+            if app?.screenshots != nil {
+                return
+            }
+            
+            if let id = app?.id {
+                let urlString = "http://www.statsallday.com/appstore/appdetail?id=\(id)"
+                
+                URLSession.shared.dataTask(with: URL(string: urlString)!, completionHandler: { (data, response, error) -> Void in
+                    
+                    if error != nil {
+                        print(error)
+                        return
+                    }
+                    
+                    do {
+                        
+                        let json = try(JSONSerialization.jsonObject(with: data!, options: .mutableContainers))
+                        
+                        let appDetail = App()
+                        appDetail.setValuesForKeys(json as! [String: AnyObject])
+                        
+                        self.app = appDetail
+                        
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            self.collectionView?.reloadData()
+                        })
+                        
+                    } catch let err {
+                        print(err)
+                    }
+                    
+                    
+                }).resume()
+            }
             
         }
     }
     
     let headerId = "headerId"
+    
+    let screenShotCellId = "screenShotCellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +62,8 @@ class AppDetailController: UICollectionViewController, UICollectionViewDelegateF
         collectionView?.backgroundColor = UIColor.white
         
         collectionView?.register(AppDetailHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
+        
+        collectionView?.register(SceenshotsCell.self, forCellWithReuseIdentifier: screenShotCellId)
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -38,6 +74,18 @@ class AppDetailController: UICollectionViewController, UICollectionViewDelegateF
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: 170)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return collectionView.dequeueReusableCell(withReuseIdentifier: screenShotCellId, for: indexPath)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 200)
     }
     
 }
@@ -52,31 +100,95 @@ class AppDetailHeader: BaseCell {
             if let imageName = app?.imageName {
                 imageView.image = UIImage(named: imageName)
             }
+            nameLabel.text = app?.name
         }
     }
 
     let imageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
+        iv.layer.cornerRadius = 16
+        iv.layer.masksToBounds = true
         return iv
+    }()
+    
+    let segmentedControl: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Details", "Reviews", "Related"])
+        sc.tintColor = UIColor.darkGray
+        sc.selectedSegmentIndex = 0
+        return sc
+    }()
+    
+    let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        return label
+    }()
+    
+    let buyButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("BUY", for: UIControlState())
+        button.layer.borderColor = UIColor(red: 0, green: 129/255, blue: 250/255, alpha: 1).cgColor
+        button.layer.borderWidth = 1
+        button.layer.cornerRadius = 5
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        return button
+    }()
+    
+    let dividerLineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.4, alpha: 0.4)
+        return view
     }()
     
     override func setupViews() {
         super.setupViews()
         
-        backgroundColor = UIColor.blue
+        backgroundColor = UIColor.clear
         
         addSubview(imageView)
+        addSubview(segmentedControl)
+        addSubview(nameLabel)
+        addSubview(buyButton)
+        addSubview(dividerLineView)
         
         imageView.backgroundColor = UIColor.yellow
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": imageView]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0": imageView]))
+        addConstraintsWithFormat("H:|-14-[v0(100)]-8-[v1]|", views: imageView, nameLabel)
+        addConstraintsWithFormat("V:|-14-[v0(100)]|", views: imageView)
+        
+        addConstraintsWithFormat("V:|-14-[v0(20)]|", views: nameLabel)
+        
+        addConstraintsWithFormat("H:|-40-[v0]-40-|", views: segmentedControl)
+        addConstraintsWithFormat("V:[v0(34)]-8-|", views: segmentedControl)
+        
+        
+        addConstraintsWithFormat("H:[v0(60)]-14-|", views: buyButton)
+        addConstraintsWithFormat("V:[v0(32)]-56-|", views: buyButton)
+        
+        addConstraintsWithFormat("H:|[v0]|", views: dividerLineView)
+        addConstraintsWithFormat("V:[v0(1)]|", views: dividerLineView)
     }
     
     
 }
+
+
+extension UIView {
+    func addConstraintsWithFormat(_ format: String, views: UIView...) {
+        
+        var viewsDictionary = [String: UIView]()
+        for (index, view) in views.enumerated() {
+            let key = "v\(index)"
+            viewsDictionary[key] = view
+            view.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
+    }
+}
+
 
 class BaseCell: UICollectionViewCell {
     override init(frame: CGRect) {
