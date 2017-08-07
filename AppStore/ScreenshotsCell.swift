@@ -10,6 +10,12 @@ import UIKit
 
 class SceenshotsCell: BaseCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    var app: App? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
     let appDetailController = AppDetailController()
     
     let collectionView: UICollectionView = {
@@ -20,6 +26,12 @@ class SceenshotsCell: BaseCell, UICollectionViewDelegate, UICollectionViewDataSo
         return cv
     }()
     
+    let dividerLineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.4, alpha: 0.4)
+        return view
+    }()
+    
     override func setupViews() {
         super.setupViews()
         
@@ -27,22 +39,39 @@ class SceenshotsCell: BaseCell, UICollectionViewDelegate, UICollectionViewDataSo
         collectionView.delegate = self
         
         addSubview(collectionView)
+        addSubview(dividerLineView)
+        
         addConstraintsWithFormat("H:|[v0]|", views: collectionView)
-        addConstraintsWithFormat("V:|[v0]|", views: collectionView)
+        
+        addConstraintsWithFormat("H:|-14-[v0]|", views: dividerLineView)
+
+        
+        addConstraintsWithFormat("V:|[v0][v1(1)]|", views: collectionView, dividerLineView)
         
         collectionView.register(ScreenshotImageCell.self, forCellWithReuseIdentifier:appDetailController.screenShotCellId)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        if let count = app?.screenshots?.count {
+            return count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCell(withReuseIdentifier: appDetailController.screenShotCellId, for: indexPath)
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: appDetailController.screenShotCellId, for: indexPath) as! ScreenshotImageCell
+        
+        if let imageName = app?.screenshots?[indexPath.item]{
+            cell.imageView.image = UIImage(named: imageName)
+
+        }
+        
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 200, height: frame.height - 28)
+        return CGSize(width: 240, height: frame.height - 28)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -60,6 +89,8 @@ class SceenshotsCell: BaseCell, UICollectionViewDelegate, UICollectionViewDataSo
         
         fileprivate override func setupViews() {
             super.setupViews()
+            
+            layer.masksToBounds = true
             
             addSubview(imageView)
             addConstraintsWithFormat("H:|[v0]|", views: imageView)

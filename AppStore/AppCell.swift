@@ -44,7 +44,6 @@ class AppCell: UICollectionViewCell {
             
         }
         
-        
     }
     
     override init(frame: CGRect) {
